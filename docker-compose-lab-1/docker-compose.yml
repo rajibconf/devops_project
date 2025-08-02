@@ -1,0 +1,25 @@
+# docker-compose.yml
+services:
+  python_service:
+    build:
+      context: .
+      dockerfile: dockerfile.python
+      args:
+        - BASE_IMAGE=python:3.12-slim
+        - APP_VERSION=2.0
+    environment:
+      - DEBUG=True
+    image: rajibconf/python_web:2.0
+
+  node_service:
+    build:
+      context: .
+      dockerfile: dockerfile.node
+      args:
+        - BASE_IMAGE=node:21-slim
+        - APP_VERSION=2.0
+        - APP_NAME=my_node_app
+    environment:
+      - NODE_ENV=development
+    image: rajibconf/node_web:2.0
+
