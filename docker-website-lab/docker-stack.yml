@@ -1,0 +1,14 @@
+services:
+  clean_work:
+    image: rajibconf/clean_work:0.1
+    ports:
+      - "80:80"
+    networks:
+      - clean_work_net_ov
+    deploy:
+      mode: replicated
+      replicas: 2
+
+networks:
+  clean_work_net_ov:
+    driver: overlay

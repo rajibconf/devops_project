@@ -1,0 +1,17 @@
+FROM ubuntu:latest
+
+WORKDIR /var/www/html
+
+LABEL maintainer="rajib.conf@gmail.com"
+LABEL version="1.0"
+LABEL description="Dockerfile for Docker Clean Work Website Lab"
+
+RUN apt-get update && \
+    apt-get install nginx -y && \
+    echo "Nginx installed successfully."
+
+COPY clean_work/. .
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
