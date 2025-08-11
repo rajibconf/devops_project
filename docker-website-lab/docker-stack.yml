@@ -1,6 +1,7 @@
+# docker-stack.yml (template)
 services:
   clean_work:
-    image: rajibconf/clean_work:latest
+    image: rajibconf/clean_work:TAG_PLACEHOLDER
     ports:
       - "80:80"
     networks:
@@ -8,6 +9,11 @@ services:
     deploy:
       mode: replicated
       replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
 
 networks:
   clean_work_net_ov:
