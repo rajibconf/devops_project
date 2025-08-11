@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = 'rajibconf/clean_work'
+        IMAGE_TAG = "${env.BUILD_NUMBER}"
+        IMAGE_TAG2 = "latest"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/your-org/my-app.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
+                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG2 .'
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-cred', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh """
+                        echo "$PASSWORD" | docker login -u "$USERNAME" --password-stdin
+                        docker push $IMAGE_NAME:$IMAGE_TAG
+                        docker push $IMAGE_NAME:$IMAGE_TAG2
+                    """
+                }
+            }
+        }
+
+        stage('Deploy Container') {
+            steps {
+                sh """
+                    docker stop my-app || true
+                    docker rm my-app || true
+                    docker run -d --name my-app -p 80:3000 $IMAGE_NAME:$IMAGE_TAG
+                """
+            }
+        }
+    }
+}
