@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'docker1' }
 
     environment {
         IMAGE_NAME = 'rajibconf/clean_work'
