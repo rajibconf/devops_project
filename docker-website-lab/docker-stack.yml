@@ -1,7 +1,7 @@
 # docker-stack.yml (template)
 services:
   clean_work:
-    image: rajibconf/clean_work:TAG_PLACEHOLDER
+    image: rajibconf/clean_work:latest
     ports:
       - "80:80"
     networks:
