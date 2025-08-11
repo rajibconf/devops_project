@@ -1,17 +1,18 @@
-FROM ubuntu:latest
-
-WORKDIR /var/www/html
+# docker-website-lab/Dockerfile
+FROM nginx:alpine
 
 LABEL maintainer="rajib.conf@gmail.com"
-LABEL version="1.2"
-LABEL description="Dockerfile for Docker gotto Job Website Lab"
+LABEL version="1.0"
+LABEL description="Nginx static site for clean_work"
 
-RUN apt-get update && \
-    apt-get install nginx -y && \
-    echo "Nginx installed successfully."
+# Remove default nginx content and copy your site
+RUN rm -rf /usr/share/nginx/html/*
+COPY clean_work/ /usr/share/nginx/html/
 
-COPY gotto_job/. .
+# Optional: add a simple healthcheck
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 CMD wget -qO- --spider http://127.0.0.1/ || exit 1
 
 EXPOSE 80
 
+# Run nginx in foreground (official image default)
 CMD ["nginx", "-g", "daemon off;"]

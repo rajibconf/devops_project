@@ -1,0 +1,80 @@
+pipeline {
+  agent any
+
+  environment {
+    IMAGE_NAME = 'rajibconf/clean_work'
+    IMAGE_TAG = "${env.BUILD_NUMBER}"
+    IMAGE_LATEST = "${IMAGE_NAME}:latest"
+    STACK_REMOTE_PATH = "/tmp/docker-stack-${env.BUILD_NUMBER}.yml"
+    DEPLOY_USER = "vagrant"
+    DEPLOY_HOST = "192.168.33.50"
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Build & Tag') {
+      steps {
+        // Build using the subfolder as context
+        sh """
+          docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f docker-website-lab/Dockerfile docker-website-lab
+          docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
+        """
+      }
+    }
+
+    stage('Docker Login & Push') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'docker-hub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+          sh '''
+            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+            docker push ${IMAGE_NAME}:${IMAGE_TAG}
+            docker push ${IMAGE_NAME}:latest
+          '''
+        }
+      }
+    }
+
+    stage('Prepare Stack File') {
+      steps {
+        // Replace placeholder in template with the build tag
+        sh '''
+          sed "s|TAG_PLACEHOLDER|${IMAGE_TAG}|g" docker-stack.yml > /tmp/docker-stack-${BUILD_NUMBER}.yml
+        '''
+      }
+    }
+
+    stage('Deploy to Swarm Manager') {
+      steps {
+        sshagent(['remote-host-server']) {                 // SSH credential (private key) stored in Jenkins
+          withCredentials([usernamePassword(credentialsId: 'docker-hub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+            sh """
+              scp /tmp/docker-stack-${BUILD_NUMBER}.yml ${DEPLOY_USER}@${DEPLOY_HOST}:${STACK_REMOTE_PATH}
+              ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} bash -s <<'ENDSSH'
+                set -euo pipefail
+                # login on the manager so --with-registry-auth can pass credentials to workers
+                echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+
+                # deploy (will create or update stack)
+                docker stack deploy -c ${STACK_REMOTE_PATH} clean_work_stack --with-registry-auth
+
+                # optionally remove old stack file
+                rm -f ${STACK_REMOTE_PATH}
+ENDSSH
+            """
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      sh 'docker logout || true'
+    }
+  }
+}
