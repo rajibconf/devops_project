@@ -7,7 +7,7 @@ pipeline {
         IMAGE_TAG2 = "latest"
         REMOTE_USER = "vagrant"
         REMOTE_HOST = "192.168.33.50"
-        STACK_FILE = "docker-website-lab/docker-stack.yml"
+        STACK_FILE = "/home/vagrant/devops_project/docker-website-lab/docker-stack.yml"
     }
 
     stages {
