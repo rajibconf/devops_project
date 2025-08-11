@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/your-org/my-app.git'
+                git 'https://github.com/rajibconf/devops_project.git'
             }
         }
 
@@ -36,9 +36,9 @@ pipeline {
         stage('Deploy Container') {
             steps {
                 sh """
-                    docker stop my-app || true
-                    docker rm my-app || true
-                    docker run -d --name my-app -p 80:3000 $IMAGE_NAME:$IMAGE_TAG
+                    docker stop clean_work || true
+                    docker rm clean_work || true
+                    docker run -d --name clean_work -p 80:3000 $IMAGE_NAME:$IMAGE_TAG
                 """
             }
         }
