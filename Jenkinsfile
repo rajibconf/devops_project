@@ -11,12 +11,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/rajibconf/devops_project.git'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 sh """
