@@ -5,6 +5,7 @@ services:
       - "8090:8080"
       - "50000:50000"
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - jenkins_home:/var/jenkins_home
     deploy:
       placement:
