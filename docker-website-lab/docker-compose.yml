@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: dockerfile
-    image: rajibconf/clean_work:0.1
+    image: rajibconf/clean_work:0.2
     container_name: clean_work
     ports:
       - "80:80"

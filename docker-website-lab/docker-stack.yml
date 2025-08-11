@@ -1,6 +1,6 @@
 services:
   clean_work:
-    image: rajibconf/clean_work:0.1
+    image: rajibconf/clean_work:0.2
     ports:
       - "80:80"
     networks:

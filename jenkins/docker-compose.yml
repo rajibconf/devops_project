@@ -1,0 +1,15 @@
+services:
+  jenkins:
+    image: jenkins/jenkins:jdk21
+    ports:
+      - "8090:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    deploy:
+      placement:
+        constraints:
+          - node.hostname==docker-machine 
+
+volumes:
+  jenkins_home:

@@ -3,14 +3,14 @@ FROM ubuntu:latest
 WORKDIR /var/www/html
 
 LABEL maintainer="rajib.conf@gmail.com"
-LABEL version="1.0"
-LABEL description="Dockerfile for Docker Clean Work Website Lab"
+LABEL version="1.2"
+LABEL description="Dockerfile for Docker gotto Job Website Lab"
 
 RUN apt-get update && \
     apt-get install nginx -y && \
     echo "Nginx installed successfully."
 
-COPY clean_work/. .
+COPY gotto_job/. .
 
 EXPOSE 80
 
