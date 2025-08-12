@@ -7,7 +7,7 @@ pipeline {
         IMAGE_TAG2 = "latest"
         REMOTE_USER = "vagrant"
         REMOTE_HOST = "192.168.33.50"
-        STACK_FILE = "/home/vagrant/devops_project/docker-website-lab/docker-stack.yml"
+        STACK_FILE = "docker-website-lab/docker-stack.yml"
     }
 
     stages {
@@ -38,7 +38,7 @@ pipeline {
                 sshagent(['remote-host-server']) {
                     sh """
                         ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST \\
-                        "docker stack deploy -c $STACK_FILE clean_work_stack"
+                        "docker stack deploy -c - clean_work_stack" < $STACK_FILE
                     """
                 }
             }
