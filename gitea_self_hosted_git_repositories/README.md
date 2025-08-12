@@ -1,4 +1,4 @@
-<h1 style="color:blue;">Gitea for Self-Hosted Git Repositories</h1>
+<h1>📚 Gitea for Self-Hosted Git Repositories</h1>
 
 <img width="992" height="504" alt="image" src="./gitea-for-private-code-repository-1.webp" />
 
