@@ -6,7 +6,7 @@ pipeline {
         IMAGE_TAG = "${env.BUILD_NUMBER}"
         IMAGE_TAG2 = "latest"
         REMOTE_USER = "vagrant"
-        REMOTE_HOST = "192.168.33.50"
+        REMOTE_HOST = "192.168.0.50"
         STACK_FILE = "docker-website-lab/docker-stack.yml"
     }
 
