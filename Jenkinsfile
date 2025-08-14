@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'docker1' }
+    agent { label 'docker-1-vm' }
 
     environment {
         IMAGE_NAME = 'rajibconf/clean_work'
@@ -35,7 +35,7 @@ pipeline {
 
         stage('Deploy to Swarm') {
             steps {
-                sshagent(['remote-host-server']) {
+                sshagent(['docker-machine-vm']) {
                     sh """
                         ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST \\
                         "docker stack deploy -c - clean_work_stack" < $STACK_FILE
