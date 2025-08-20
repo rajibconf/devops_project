@@ -1,0 +1,87 @@
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    container_name: homeassistant
+    user: "1001:1001"
+    restart: unless-stopped
+    network_mode: "service:proxy" # attach to Traefik sidecar for SSL
+    depends_on:
+      - mosquitto
+    volumes:
+      - /srv/homeassistant/config:/config:rw
+      - homeassistant_db:/config/home-assistant_v2.db
+    environment:
+      - TZ=America/Chicago
+    secrets:
+      - api_key
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8123/api/health || exit 1"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETUID
+      - SETGID
+
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    restart: unless-stopped
+    networks:
+      homenet:
+    volumes:
+      - /srv/mosquitto/config:/mosquitto/config:ro
+      - /srv/mosquitto/data:/mosquitto/data
+      - /srv/mosquitto/log:/mosquitto/log
+    ports:
+      - "1883:1883"
+
+  influxdb:
+    image: influxdb:2.6
+    container_name: influxdb
+    restart: unless-stopped
+    networks:
+      homenet:
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    environment:
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD_FILE=/run/secrets/influxdb_admin_password
+    secrets:
+      - influxdb_admin_password
+    ports:
+      - "8086:8086"
+
+  grafana:
+    image: grafana/grafana:9.5
+    container_name: grafana
+    restart: unless-stopped
+    networks:
+      homenet:
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD_FILE=/run/secrets/grafana_admin_password
+    secrets:
+      - grafana_admin_password
+    ports:
+      - "3000:3000"
+
+
+networks:
+  homenet:
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+          gateway: 192.168.1.1
+
+volumes:
+  homeassistant_db:
+  influxdb_data:
+  grafana_data:
