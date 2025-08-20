@@ -8,6 +8,7 @@ I will gradually add the following:
 - Docker containerization projects
 - Kubernetes (K8s) deployment examples
 - Monitoring with Prometheus + Grafana
-- Infrastructure with Ansible
+- Infrastructure povisoning with Terraform
+- Configuration mgm with Ansible
 - Log management with Loki and ELK stack
 - Secrets management using Vault
