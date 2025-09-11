@@ -1,0 +1,17 @@
+---
+- name: Check if node is already joined
+  stat:
+    path: /etc/kubernetes/kubelet.conf
+  register: kubelet_conf
+
+- name: Join worker node to cluster
+  command: "{{ hostvars['k8s-master']['join_command'] }}"
+  become: yes
+  when: not kubelet_conf.stat.exists and hostvars['k8s-master']['join_command'] is defined
+
+- name: Enable kubelet service
+  systemd:
+    name: kubelet
+    state: started
+    enabled: yes
+  become: yes

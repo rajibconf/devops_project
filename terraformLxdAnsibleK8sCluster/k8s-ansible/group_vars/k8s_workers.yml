@@ -1,0 +1,3 @@
+---
+# Worker node specific variables
+kubernetes_role: node

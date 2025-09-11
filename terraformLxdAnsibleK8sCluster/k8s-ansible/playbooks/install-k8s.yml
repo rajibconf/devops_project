@@ -1,0 +1,6 @@
+---
+- name: Install Kubernetes on all nodes
+  hosts: k8s_cluster
+  become: yes
+  roles:
+    - kubernetes

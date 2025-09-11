@@ -1,0 +1,59 @@
+---
+- name: Check if cluster is already initialized
+  stat:
+    path: /etc/kubernetes/admin.conf
+  register: kubeadm_ca
+
+- name: Initialize Kubernetes cluster
+  command: >
+    kubeadm init
+    --apiserver-advertise-address={{ kubernetes_apiserver_advertise_address }}
+    --pod-network-cidr={{ pod_network_cidr }}
+    --service-cidr={{ service_cidr }}
+  become: yes
+  when: not kubeadm_ca.stat.exists
+  register: kubeadm_init
+
+- name: Create .kube directory for ubuntu user
+  file:
+    path: /home/ubuntu/.kube
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+  become: yes
+
+- name: Copy admin.conf to user's kube config
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /home/ubuntu/.kube/config
+    remote_src: yes
+    owner: ubuntu
+    group: ubuntu
+    mode: '0644'
+  become: yes
+
+- name: Install Calico network addon
+  shell: |
+    kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.0/manifests/calico.yaml
+  become_user: ubuntu
+  when: not kubeadm_ca.stat.exists
+
+- name: Generate join command
+  command: kubeadm token create --print-join-command
+  become: yes
+  register: join_command_raw
+  when: not kubeadm_ca.stat.exists
+
+- name: Set join command as fact
+  set_fact:
+    join_command: "{{ join_command_raw.stdout }}"
+  when: not kubeadm_ca.stat.exists
+
+- name: Wait for all nodes to be ready
+  shell: kubectl get nodes --no-headers | grep -c Ready
+  become_user: ubuntu
+  register: ready_nodes
+  until: ready_nodes.stdout|int >= 1
+  retries: 30
+  delay: 10

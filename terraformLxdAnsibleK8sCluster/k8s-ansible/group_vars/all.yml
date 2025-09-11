@@ -1,0 +1,27 @@
+---
+# Kubernetes version
+kubernetes_version: "1.28"
+kubernetes_version_rhel_package: "1.28.0"
+
+# Docker configuration
+docker_edition: 'ce'
+docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+
+# Network configuration
+pod_network_cidr: "192.168.0.0/16"
+service_cidr: "10.96.0.0/12"
+
+# Node configuration
+swap_enabled: false
+
+# Container runtime
+container_runtime: containerd
+
+# CNI Plugin
+cni_plugin: calico
+
+# System settings
+timezone: "Asia/Dhaka"

@@ -1,0 +1,6 @@
+---
+- name: Join worker nodes
+  hosts: k8s_workers
+  become: yes
+  roles:
+    - worker

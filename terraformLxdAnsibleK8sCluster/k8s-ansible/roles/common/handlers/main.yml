@@ -1,0 +1,11 @@
+---
+- name: reload sysctl
+  command: sysctl --system
+  become: yes
+
+- name: restart containerd
+  systemd:
+    name: containerd
+    state: restarted
+    enabled: yes
+  become: yes

@@ -1,0 +1,6 @@
+---
+- name: Prepare all nodes
+  hosts: k8s_cluster
+  become: yes
+  roles:
+    - common

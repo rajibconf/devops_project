@@ -1,0 +1,5 @@
+---
+- import_playbook: playbooks/prepare-nodes.yml
+- import_playbook: playbooks/install-k8s.yml  
+- import_playbook: playbooks/setup-master.yml
+- import_playbook: playbooks/join-workers.yml
