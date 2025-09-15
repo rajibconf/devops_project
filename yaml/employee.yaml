@@ -1,0 +1,15 @@
+---
+Employee:
+  - id: 1
+    name: John Doe
+    position: Software Engineer
+    department: IT
+    salary: 75000
+    hire_date: 2020-01-15
+
+  - id: 2
+    name: Jane Smith
+    position: Project Manager
+    department: IT
+    salary: 90000
+    hire_date: 2018-03-22
