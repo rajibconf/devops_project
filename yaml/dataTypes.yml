@@ -1,0 +1,21 @@
+# data types in yaml
+---
+string: "Hello, World!"
+integer: 42
+float: 3.14
+boolean_true: true
+boolean_false: false
+null_value: null
+list:
+  - item1
+  - item2
+  - item3
+dictionary:
+  key1: value1
+  key2: value2
+  key3: value3
+date: 2023-10-05
+timestamp: 2023-10-05T14:48:00Z
+binary: !!binary |
+  R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=
+# This YAML file demonstrates various data types supported in YAML.
