@@ -1,3 +1,4 @@
+# This YAML file contains employee data for an organization.
 ---
 Employee:
   - id: 1
