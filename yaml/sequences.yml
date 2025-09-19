@@ -1,0 +1,31 @@
+---
+# List sequence in block style
+fruits:
+- Apple
+- Banana
+- Cherry
+- Date
+- Elderberry
+
+# List sequence in flow style
+vegetables: [Carrot, Broccoli, Spinach, Kale, Peas]
+
+# Nested/Embedded sequences
+meals:
+  - breakfast: [Pancakes, Syrup, Berries]
+  - lunch: [Sandwich, Chips, Soda]
+  - dinner: [Steak, Potatoes, Salad]
+products:
+  - Laptop:
+      - Brand: Dell
+      - Model: XPS 13
+      - Price: $999
+  - Smartphone:
+      - Brand: Apple
+      - Model: iPhone 13
+      - Price: $799
+  - Tablet:
+      - Brand: Samsung
+      - Model: Galaxy Tab S7
+      - Price: $649
+    
