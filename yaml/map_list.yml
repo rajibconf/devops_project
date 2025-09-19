@@ -1,0 +1,29 @@
+# Map & List
+---
+- name: John Doe
+  age: 30
+  skills:
+    - Python
+    - JavaScript
+    - SQL
+- name: Jane Smith
+  age: 25
+  skills:
+    - Java
+    - C#
+    - HTML/CSS
+- name: Emily Johnson
+  age: 35
+  skills:
+    - Go
+    - Rust
+    - Docker
+- Nested Example:
+    team:
+      - member: Alice
+        role: Developer
+      - member: Bob
+        role: Designer
+      - member: Charlie
+        role: Product Manager
+    project: YAML Parser
